@@ -1,13 +1,17 @@
-import { notFound } from 'next/navigation';
+'use client';
+
+import { useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getModelById, aiModels } from '@/lib/models';
-import type { AIModel } from '@/lib/models';
+import { getModelById } from '@/lib/models';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRightSquare, CheckCircle, Info } from 'lucide-react';
+import ModelDetailLoading from './loading';
 
 interface ModelPageProps {
   params: {
@@ -15,31 +19,25 @@ interface ModelPageProps {
   };
 }
 
-// Statically generate routes for all models
-export async function generateStaticParams() {
-  return aiModels.map((model) => ({
-    id: model.id,
-  }));
-}
-
-export async function generateMetadata({ params }: ModelPageProps) {
-  const model = getModelById(params.id);
-  if (!model) {
-    return {
-      title: 'Model Not Found',
-    };
-  }
-  return {
-    title: `${model.name} - Further`,
-    description: model.shortDescription,
-  };
-}
-
 export default function ModelPage({ params }: ModelPageProps) {
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
   const model = getModelById(params.id);
 
-  if (!model) {
-    notFound();
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    if (!model) {
+      // If user is loaded and authenticated but model is not found, redirect
+      router.push('/');
+    }
+  }, [user, authLoading, model, router]);
+
+  if (authLoading || !user || !model) {
+    return <ModelDetailLoading />;
   }
 
   const breadcrumbItems = [
@@ -69,7 +67,7 @@ export default function ModelPage({ params }: ModelPageProps) {
             height={450}
             className="w-full h-auto object-cover"
             data-ai-hint={model.dataAiHint || "technology detail"}
-            priority // Prioritize loading image on detail page
+            priority
           />
         </Card>
 

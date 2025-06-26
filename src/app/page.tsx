@@ -1,13 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 import type { AIModel } from '@/lib/models';
 import { getModels, getModelCategories } from '@/lib/models';
 import ModelCard from '@/components/ModelCard';
 import ModelFilters from '@/components/ModelFilters';
-import { Skeleton } from '@/components/ui/skeleton'; // For loading state
+import { Skeleton } from '@/components/ui/skeleton';
+import Loading from './loading';
 
 export default function Home() {
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
   const [allModels, setAllModels] = useState<AIModel[]>([]);
   const [filteredModels, setFilteredModels] = useState<AIModel[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -15,18 +21,24 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadModels = async () => {
+    if (authLoading) return;
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    const loadModels = () => {
       setIsLoading(true);
       const all = getModels();
       const cats = getModelCategories();
       
       setAllModels(all);
-      setFilteredModels(all); // Initially show all models
+      setFilteredModels(all);
       setCategories(cats);
       setIsLoading(false);
     };
     loadModels();
-  }, []);
+  }, [user, authLoading, router]);
 
   const handleFilterChange = (category: string) => {
     setCurrentFilter(category);
@@ -37,18 +49,18 @@ export default function Home() {
     }
   };
 
-  const renderModelGrid = (models: AIModel[], sectionTitle: string, loading: boolean, count: number = 6) => {
-    if (loading) {
+  const renderModelGrid = (models: AIModel[]) => {
+    if (isLoading) {
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {Array.from({ length: count }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <CardSkeleton key={index} />
           ))}
         </div>
       );
     }
     if (models.length === 0) {
-      return <p className="text-center text-muted-foreground col-span-full">No models found for "{sectionTitle}".</p>;
+      return <p className="text-center text-muted-foreground col-span-full">No models found for "{currentFilter}".</p>;
     }
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -71,6 +83,9 @@ export default function Home() {
     </div>
   );
 
+  if (authLoading || !user) {
+    return <Loading />;
+  }
 
   return (
     <div className="space-y-16">
@@ -81,7 +96,7 @@ export default function Home() {
         {!isLoading && categories.length > 0 && (
           <ModelFilters categories={categories} currentFilter={currentFilter} onFilterChange={handleFilterChange} />
         )}
-        {renderModelGrid(filteredModels, currentFilter, isLoading, allModels.length > 0 ? allModels.length : 6)}
+        {renderModelGrid(filteredModels)}
       </section>
     </div>
   );
