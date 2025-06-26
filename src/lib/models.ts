@@ -7,6 +7,7 @@ export interface AIModel {
   category: string;
   demoUrl: string;
   imageUrl: string;
+  dataAiHint: string;
   featured: boolean;
   examples?: string[];
   icon?: React.ComponentType<{ className?: string }>;
@@ -15,7 +16,7 @@ export interface AIModel {
 
 // Placeholder for lucide-react icons, assuming they exist
 // For actual implementation, ensure these icons are available or use appropriate ones.
-import { Bot, MessageSquare, Image as ImageIcon, BarChart, Code, Zap, Brain, Settings, Search } from 'lucide-react';
+import { Bot, MessageSquare, Car, BarChart, Code, PaintRoller, Brain, Pen, Search } from 'lucide-react';
 
 
 export const aiModels: AIModel[] = [
@@ -26,12 +27,12 @@ export const aiModels: AIModel[] = [
     longDescription: 'chatHue is an AI-powered tool that recommends paint colors based on user preferences, coordinating colors, and design style, helping customers visualize and choose the perfect shade.',
     capabilities: ['Text Generation', 'Translation', 'Summarization', 'Q&A'],
     category: 'Consumer Recommendations',
-    demoUrl: 'https://example.com/demo/textgen-alpha',
+    demoUrl: 'https://chathue.behr.com/',
     imageUrl: '/behr.png',
     dataAiHint: 'abstract tech',
     featured: true,
     examples: ['Write a marketing email for a new product launch.', 'Translate "Hello, world!" into French.', 'Summarize a long news article.'],
-    icon: Bot,
+    icon: PaintRoller,
     tags: ['Conversational AI', 'RAG', 'Business Logic']
   },
   {
@@ -41,12 +42,12 @@ export const aiModels: AIModel[] = [
     longDescription: 'Drive is an AI app that maps the ideal scenic drive based on your car type, location, and preferred distance—designed to maximize driving enjoyment.',
     capabilities: ['Object Detection', 'Image Classification', 'Facial Recognition', 'OCR'],
     category: 'Brand Engagement',
-    demoUrl: 'https://example.com/demo/vision-pro',
+    demoUrl: 'https://staging-801696980212.us-central1.run.app/static/',
     imageUrl: '/pennzoil.png',
     dataAiHint: 'futuristic optics',
     featured: true,
     examples: ['Identify all cars in an image.', 'Classify an image as "landscape" or "portrait".', 'Extract text from a scanned document.'],
-    icon: ImageIcon,
+    icon: Car,
     tags: ['Guided Experience', 'Maps', 'Recommendations']
   },
   {
@@ -61,7 +62,7 @@ export const aiModels: AIModel[] = [
     dataAiHint: 'coding lines',
     featured: false,
     examples: ['Generate a Python function to sort a list.', 'Complete a JavaScript arrow function.', 'Translate a Java snippet to C++.'],
-    icon: Code,
+    icon: Brain,
     tags: ['AI Search', 'AI Agent', 'Automation', 'RAG']
   },
   {
@@ -76,7 +77,7 @@ export const aiModels: AIModel[] = [
     dataAiHint: 'speech bubbles',
     featured: true,
     examples: ['Build a customer support chatbot.', 'Create a virtual assistant for scheduling.', 'Develop an FAQ bot for a website.'],
-    icon: MessageSquare,
+    icon: Search,
     tags: ['Machine Learning']
   },
   {
@@ -91,7 +92,7 @@ export const aiModels: AIModel[] = [
     dataAiHint: 'data graph',
     featured: false,
     examples: ['Identify fraudulent transactions.', 'Predict customer churn.', 'Forecast sales trends.'],
-    icon: BarChart,
+    icon: Pen,
     tags: ['Generative AI', 'Recommendations', 'AI Agent ']
   },
   {
@@ -101,12 +102,12 @@ export const aiModels: AIModel[] = [
     longDescription: 'The Composable CDP Assistant is a chatbot that delivers natural language insights about users and buying groups by combining CRM data with other sources in the CDP, giving sales teams a complete view of the customer journey.',
     capabilities: ['Speech-to-Text', 'Speaker Diarization', 'Audio Sentiment Analysis', 'Voice Command Recognition'],
     category: 'Customer Insights',
-    demoUrl: 'https://example.com/demo/audiomind-pro',
+    demoUrl: 'https://agentic-007-demo-370244238072.us-central1.run.app/',
     imageUrl: '/cdpassistant.png',
     dataAiHint: 'sound wave',
     featured: false,
     examples: ['Transcribe a podcast episode.', 'Analyze sentiment in customer service calls.', 'Enable voice control for an application.'],
-    icon: Zap, // Placeholder, consider Waveform or Mic
+    icon: BarChart,
     tags: []
   }
 ];
