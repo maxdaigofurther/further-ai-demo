@@ -32,7 +32,7 @@ export default function LoginPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       
-      if (user?.email?.endsWith('@gofurther.com')) {
+      if (user?.email?.endsWith('@gofurther.com') || user?.email?.endsWith('@momentum.com')) {
         // The useEffect will handle redirecting the user.
       } else {
         await auth.signOut();
